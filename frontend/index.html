@@ -1,0 +1,2297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUARDIA - Plateforme Événementielle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #dbeafe;
+            --secondary: #64748b;
+            --accent: #0ea5e9;
+            --success: #16a34a;
+            --warning: #ea580c;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ============ LAYOUT ============ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+            letter-spacing: -0.5px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+            flex: 1;
+            margin-left: 48px;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 0;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+
+        /* ============ AUTH PAGE ============ */
+        .auth-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: var(--bg);
+        }
+
+        .auth-box {
+            background: var(--surface);
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .auth-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.2s;
+            position: relative;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-md);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            border: 1px solid;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            border-color: #bbf7d0;
+            color: #166534;
+        }
+
+        .auth-footer {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f0f9ff;
+            border-radius: 6px;
+            border: 1px solid #bae6fd;
+            font-size: 12px;
+            color: var(--text);
+        }
+
+        .auth-footer strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--primary);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* ============ MAIN CONTENT ============ */
+        .section {
+            padding: 40px 0;
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* ============ FILTERS ============ */
+        .filters {
+            margin-bottom: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .search-box input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        /* ============ EVENTS GRID ============ */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .event-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .event-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .event-type {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .event-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .event-organizer {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .event-body {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .event-description {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .event-capacity {
+            margin-bottom: 16px;
+        }
+
+        .capacity-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .capacity-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .capacity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            border-radius: 3px;
+        }
+
+        .event-footer {
+            padding: 0 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-register,
+        .btn-view,
+        .btn-edit,
+        .btn-delete,
+        .btn-add-event {
+            padding: 10px 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-register:hover:not(:disabled),
+        .btn-view:hover,
+        .btn-edit:hover,
+        .btn-delete:hover,
+        .btn-add-event:hover {
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-edit {
+            background: var(--secondary);
+        }
+
+        .btn-edit:hover {
+            background: #475569;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+        }
+
+        .btn-delete:hover {
+            background: #b91c1c;
+        }
+
+        /* ============ MODAL ============ */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.2s ease;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            margin: 40px auto;
+            padding: 32px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .close-modal {
+            font-size: 28px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            color: var(--text);
+        }
+
+        /* ============ PARTICIPANTS ============ */
+        .participant-item {
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+
+        .participant-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .participant-name {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .participant-email {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .participant-status {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        /* ============ EMPTY STATE ============ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        /* ============ PROFILE ============ */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .profile-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .profile-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input {
+            cursor: pointer;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .edit-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .subscribers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .subscriber-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .subscriber-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .subscriber-field:last-child {
+            border-bottom: none;
+        }
+
+        .subscriber-label {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .subscriber-value {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* ============ ADMIN ============ */
+        .admin-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .admin-tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .admin-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .btn-add-event {
+            margin-bottom: 24px;
+            background: var(--success);
+        }
+
+        .btn-add-event:hover {
+            background: #15803d;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-card-label {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    
+
+        .events-grid-pro {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .event-card-pro {
+            background: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .event-card-pro:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .event-badge-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, rgba(37, 99, 235, 0.05) 100%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .badge-type {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-countdown {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--warning);
+            background: rgba(234, 88, 12, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .event-title-pro {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            padding: 20px 20px 0 20px;
+            line-height: 1.4;
+        }
+
+        .event-details-pro {
+            padding: 16px 20px;
+            flex: 1;
+        }
+
+        .detail-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: flex-start;
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-icon {
+            font-size: 18px;
+            min-width: 20px;
+        }
+
+        .detail-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-light);
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .event-description-pro {
+            margin: 12px 0;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.5;
+            border-left: 3px solid var(--primary);
+        }
+
+        .btn-register, .btn-past {
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-register {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-register:hover:not(:disabled) {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-past {
+            background: var(--text-light);
+            color: white;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .event-card-past {
+            opacity: 0.75;
+        }
+</style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Modal Participants -->
+    <div id="participantsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Participants inscrits</h2>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <div class="search-box" style="margin-bottom: 16px;">
+                <input type="text" id="participantSearch" placeholder="Rechercher..." onkeyup="filterParticipants()">
+            </div>
+            <div id="participantsList"></div>
+        </div>
+    </div>
+
+    <!-- Modal Créer Événement -->
+    <div id="createEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Créer un événement</h2>
+                <button class="close-modal" onclick="closeCreateModal()">×</button>
+            </div>
+            <form onsubmit="handleCreateEvent(event)">
+                <div class="form-group">
+                    <label>Titre</label>
+                    <input type="text" id="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="eventType" required>
+                        <option value="Conférence">Conférence</option>
+                        <option value="Atelier">Atelier</option>
+                        <option value="Social">Social</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="datetime-local" id="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Lieu</label>
+                    <input type="text" id="eventLocation" required>
+                </div>
+                <div class="form-group">
+                    <label>Capacité</label>
+                    <input type="number" id="eventCapacity" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Organisateur</label>
+                    <input type="text" id="eventOrganizer" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="eventDescription" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Créer l'événement</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Modifier Événement -->
+    <div id="editEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Modifier l'événement</h2>
+                <button class="close-modal" onclick="closeEditEventModal()">×</button>
+            </div>
+            <form onsubmit="handleEditEvent(event)">
+                <div class="form-group">
+                    <label>Titre</label>
+                    <input type="text" id="editEventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="editEventType" required>
+                        <option value="Conférence">Conférence</option>
+                        <option value="Atelier">Atelier</option>
+                        <option value="Social">Social</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="datetime-local" id="editEventDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Lieu</label>
+                    <input type="text" id="editEventLocation" required>
+                </div>
+                <div class="form-group">
+                    <label>Capacité</label>
+                    <input type="number" id="editEventCapacity" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Organisateur</label>
+                    <input type="text" id="editEventOrganizer" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="editEventDescription" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
+        let currentUser = null;
+        let authToken = null;
+        let allEvents = [];
+        let selectedFilter = 'Tous';
+        let searchQuery = '';
+
+        let mockEvents = [
+            {
+                id: 1,
+                title: 'Conférence Web Development',
+                type: 'Conférence',
+                date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+                location: 'Paris, France',
+                capacity: 100,
+                registeredcount: 45,
+                description: 'Découvrez les dernières technologies en développement web et les tendances 2025',
+                organizer: 'TechConf',
+                level: 'Avancé',
+                language: 'Français',
+                participants: [
+                    { name: 'Alice Martin', email: 'alice@example.com' },
+                    { name: 'Bob Durand', email: 'bob@example.com' }
+                ]
+            },
+            {
+                id: 2,
+                title: 'Atelier React Avancé',
+                type: 'Atelier',
+                date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+                location: 'Lyon, France',
+                capacity: 30,
+                registeredcount: 28,
+                description: 'Formation intensive React avec les meilleures pratiques et patterns modernes',
+                organizer: 'ReactSchool',
+                level: 'Avancé',
+                language: 'Français',
+                participants: [
+                    { name: 'Frank Martin', email: 'frank@example.com' }
+                ]
+            },
+            {
+                id: 3,
+                title: 'Soirée Networking Tech',
+                type: 'Social',
+                date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+                location: 'Marseille, France',
+                capacity: 50,
+                registeredcount: 32,
+                description: 'Rencontrez des développeurs et professionnels du secteur tech',
+                organizer: 'TechCommunity',
+                level: 'Débutant',
+                language: 'Français',
+                participants: [
+                    { name: 'Iris Garcia', email: 'iris@example.com' }
+                ]
+            }
+        ];
+
+        const token = localStorage.getItem('authToken');
+        const user = localStorage.getItem('currentUser');
+
+        if (token && user) {
+            authToken = token;
+            currentUser = JSON.parse(user);
+            renderApp();
+            allEvents = [...mockEvents];
+            renderEvents();
+        } else {
+            renderAuth();
+        }
+
+        function renderAuth() {
+            document.getElementById('root').innerHTML = `
+                <div class="auth-wrapper">
+                    <div class="auth-box">
+                        <div class="auth-header">
+                            <h1 class="auth-title">GUARDIA</h1>
+                            <p class="auth-subtitle">Plateforme de gestion d'événements</p>
+                        </div>
+                        <div id="auth-alert"></div>
+                        <div class="tabs">
+                            <button class="tab active" onclick="switchAuthTab('login')">Connexion</button>
+                            <button class="tab" onclick="switchAuthTab('register')">Inscription</button>
+                        </div>
+
+                        <div id="login-form">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="login-email" placeholder="admin@guardia.fr">
+                            </div>
+                            <div class="form-group">
+                                <label>Mot de passe</label>
+                                <input type="password" id="login-password" placeholder="admin123">
+                            </div>
+                            <button type="button" class="btn-primary" onclick="handleLogin()">Se connecter</button>
+                            <div class="auth-footer">
+                                <strong>Comptes de test :</strong>
+                                Admin: admin@guardia.fr / admin123<br>
+                                User: user@guardia.fr / user123
+                            </div>
+                        </div>
+
+                        <div id="register-form" class="hidden">
+                            <div class="form-group">
+                                <label>Nom complet</label>
+                                <input type="text" id="register-name" placeholder="Jean Dupont">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="register-email" placeholder="votre@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label>ID Étudiant</label>
+                                <input type="text" id="register-student-id" placeholder="2024001">
+                            </div>
+                            <div class="form-group">
+                                <label>Mot de passe</label>
+                                <input type="password" id="register-password" placeholder="Min. 6 caractères">
+                            </div>
+                            <button class="btn-primary" onclick="handleRegister()">S'inscrire</button>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            `;
+        
+            
+        }
+
+        // Event delegation pour les boutons S'inscrire
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('btn-register')) {
+        const eventId = e.target.getAttribute('data-event-id');
+   
+    }
+});
+
+async function handleLogin() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    if (!email || !password) {
+        alert('Veuillez remplir tous les champs');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:3001/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userId', data.userId);
+            alert('✅ Connexion réussie !');
+            window.location.href = 'http://localhost:3001';
+
+        } else {
+            alert('❌ ' + (data.error || 'Erreur de connexion'));
+        }
+    } catch (error) {
+        alert('Erreur: ' + error.message);
+    }
+}
+async function handleRegister() {
+    const name = document.getElementById('register-name').value;
+    const email = document.getElementById('register-email').value;
+    const studentId = document.getElementById('register-student-id').value;
+    const password = document.getElementById('register-password').value;
+
+    if (!name || !email || !studentId || !password) {
+        alert('Veuillez remplir tous les champs');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:3001/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, studentId, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert('✅ Inscription réussie ! Connectez-vous maintenant.');
+            switchAuthTab('login');
+        } else {
+            alert('❌ ' + (data.error || 'Erreur d\'inscription'));
+        }
+    } catch (error) {
+        alert('Erreur: ' + error.message);
+    }
+}
+function switchAuthTab(tab) {
+    document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+    document.getElementById('register-form').classList.toggle('hidden', tab !== 'register');
+    
+    document.querySelectorAll('.tab').forEach((btn, i) => {
+        btn.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+    });
+}
+
+async function handleEventRegister(eventId) {
+    console.log('📤 Tentative d\'inscription à l\'événement', eventId);
+    
+    const token = localStorage.getItem('token');
+    console.log('Token:', token ? '✅ Présent' : '❌ Manquant');
+
+    if (!token) {
+        alert('Veuillez vous connecter d\'abord');
+        return;
+    }
+
+    try {
+        console.log('🔄 Envoi de la requête...');
+        const response = await fetch('http://localhost:3001/api/events/' + eventId + '/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ phone: '' })
+        });
+
+        console.log('✅ Réponse reçue:', response.status, response.statusText);
+        const data = await response.json();
+        console.log('📦 Données:', data);
+
+        if (response.ok) {
+            alert('✅ Inscription réussie !');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            alert('❌ Erreur: ' + (data.error || data.message));
+        }
+    } catch (error) {
+        console.error('❌ Erreur complète:', error);
+        alert('Erreur: ' + error.message);
+    }
+}
+
+
+
+
+        async function handleRegister() {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const studentId = document.getElementById('register-student-id').value;
+            const password = document.getElementById('register-password').value;
+
+            if (!name || !email || !studentId || !password) {
+                showAlert('Tous les champs sont requis', 'error');
+                return;
+            }
+
+            if (!email.includes('@') || !email.includes('.')) {
+                showAlert('Email invalide', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('Le mot de passe doit contenir au moins 6 caractères', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, student_id: studentId, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert('Compte créé! Connectez-vous maintenant.', 'success');
+                    setTimeout(() => switchAuthTab('login'), 1500);
+                } else {
+                    showAlert(data.message || 'Erreur lors de la création du compte', 'error');
+                }
+            } catch (error) {
+                showAlert('Erreur de connexion au serveur', 'error');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('auth-alert');
+            if (alertBox) {
+                alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+                setTimeout(() => { alertBox.innerHTML = ''; }, 4000);
+            }
+        }
+
+        function renderApp() {
+            const isAdmin = currentUser?.role === 'admin';
+            document.getElementById('root').innerHTML = `
+                <header class="header">
+                    <div class="container">
+                        <div class="header-content">
+                            <div class="logo" onclick="switchView('events')">GUARDIA</div>
+                            <nav class="nav">
+                                <button class="nav-link active" data-view="events" onclick="switchView('events')">Événements</button>
+                                <button class="nav-link" data-view="myevents" onclick="switchView('myevents')">Mes événements</button>
+                                <button class="nav-link" data-view="profile" onclick="switchView('profile')">Profil</button>
+                                ${isAdmin ? '<button class="nav-link" data-view="admin" onclick="switchView(\'admin\')">Admin</button>' : ''}
+                            </nav>
+                            <div class="user-section">
+                                <span class="user-name">${currentUser.name}</span>
+                                <button class="logout-btn" onclick="logout()">Déconnexion</button>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <div id="content"></div>
+            `;
+            switchView('events');
+        }
+
+        function switchView(view) {
+            document.querySelectorAll('[data-view]').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-view="${view}"]`)?.classList.add('active');
+            
+            if (view === 'events') renderEvents();
+            else if (view === 'myevents') renderMyEvents();
+            else if (view === 'profile') renderProfile();
+            else if (view === 'admin') renderAdmin();
+        }
+
+        function filterEvents() {
+            let filtered = allEvents.filter(e => {
+                try {
+                    return new Date(e.date) > new Date();
+                } catch (err) {
+                    return false;
+                }
+            });
+            
+            if (selectedFilter !== 'Tous') {
+                filtered = filtered.filter(e => e.type === selectedFilter);
+            }
+            
+            if (searchQuery.trim() !== '') {
+                filtered = filtered.filter(e =>
+                    e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    e.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    e.location.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            }
+            
+            return filtered;
+        }
+
+        async function renderEvents() {
+            try {
+                const response = await fetch('http://localhost:3001/api/events');
+                if (response.ok) {
+                    allEvents = await response.json();
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+
+            // Appliquer les filtres et recherche directement
+            let filtered = allEvents.filter(e => {
+                try {
+                    // Appliquer le filtre type
+                    if (selectedFilter !== 'Tous' && e.type !== selectedFilter) {
+                        return false;
+                    }
+
+                    // Appliquer la recherche
+                    if (searchQuery.trim() !== '') {
+                        const query = searchQuery.toLowerCase();
+                        return e.title.toLowerCase().includes(query) || 
+                               e.description.toLowerCase().includes(query);
+                    }
+
+                    return true;
+                } catch (err) {
+                    return false;
+                }
+            });
+
+            // Séparer futurs et passés
+            const now = new Date();
+            const futurs = filtered.filter(e => {
+                try {
+                    return new Date(e.date) >= now;
+                } catch (err) {
+                    return false;
+                }
+            }).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const passes = filtered.filter(e => {
+                try {
+                    return new Date(e.date) < now;
+                } catch (err) {
+                    return false;
+                }
+            }).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            console.log('Futurs:', futurs.length, 'Passés:', passes.length, 'Total:', filtered.length);
+
+            const formatDate = (dateStr) => {
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('fr-FR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            };
+
+            const formatTime = (dateStr) => {
+                const date = new Date(dateStr);
+                return date.toLocaleTimeString('fr-FR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            };
+
+            let html_content = `
+                <section class="section">
+                    <div class="container">
+                        <div class="section-header" style="margin-bottom: 30px;">
+                            <h2 class="section-title">🎯 Événements à venir</h2>
+                            <p style="color: var(--text-light); font-size: 14px; margin-top: 5px;">${futurs.length} événement${futurs.length > 1 ? 's' : ''}</p>
+                        </div>
+
+                        <div class="filters" style="margin-bottom: 30px;">
+                            <div class="filter-chips">
+                                <span class="filter-chip active" onclick="selectFilter('Tous'); renderEvents();">Tous</span>
+                                <span class="filter-chip" onclick="selectFilter('Conférence'); renderEvents();">🎤 Conférence</span>
+                                <span class="filter-chip" onclick="selectFilter('Atelier'); renderEvents();">🛠️ Atelier</span>
+                                <span class="filter-chip" onclick="selectFilter('Social'); renderEvents();">🎉 Social</span>
+                            </div>
+                            <input type="text" class="search-box" placeholder="🔍 Rechercher..." onkeyup="updateSearch(); renderEvents();">
+                        </div>
+
+                        ${futurs.length === 0 ? `
+                            <div class="empty-state" style="text-align: center; padding: 60px 20px;">
+                                <p style="font-size: 24px; margin-bottom: 10px;">📭</p>
+                                <p>Aucun événement à venir</p>
+                            </div>
+                        ` : `
+                            <div class="events-grid-pro">
+                                ${futurs.map(event => {
+                                    const typeEmoji = {'Conférence': '🎤', 'Atelier': '🛠️', 'Social': '🎉'}[event.type] || '📌';
+                                    const jours = Math.ceil((new Date(event.date) - now) / (1000 * 60 * 60 * 24));
+
+                                    return `
+                                        <div class="event-card-pro">
+                                            <div class="event-badge-top">
+                                                <span class="badge-type">${typeEmoji} ${event.type}</span>
+                                                <span class="badge-countdown">${jours === 0 ? '🔥 Aujourd\'hui' : jours === 1 ? '⏰ Demain' : '📅 ' + jours + 'j'}</span>
+                                            </div>
+                                            <h3 class="event-title-pro">${event.title}</h3>
+                                            <div class="event-details-pro">
+                                                <div class="detail-item">
+                                                    <span class="detail-icon">📅</span>
+                                                    <div class="detail-content">
+                                                        <span class="detail-label">Date</span>
+                                                        <span class="detail-value">${formatDate(event.date)}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <span class="detail-icon">⏰</span>
+                                                    <div class="detail-content">
+                                                        <span class="detail-label">Heure</span>
+                                                        <span class="detail-value">${formatTime(event.date)}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <span class="detail-icon">📍</span>
+                                                    <div class="detail-content">
+                                                        <span class="detail-label">Lieu</span>
+                                                        <span class="detail-value">${event.location}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <span class="detail-icon">👤</span>
+                                                    <div class="detail-content">
+                                                        <span class="detail-label">Organisateur</span>
+                                                        <span class="detail-value">${event.organizer || 'Organisateur'}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <span class="detail-icon">👥</span>
+                                                    <div class="detail-content">
+                                                        <span class="detail-label">Capacité</span>
+                                                        <span class="detail-value">${event.capacity} personnes</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            ${event.description ? `<div class="event-description-pro"><p>${event.description}</p></div>` : ''}
+                                            <button class="btn-register" data-event-id="${event.id}">🌟 S'inscrire</button>
+
+
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        `}
+
+                        ${passes.length > 0 ? `
+                        <div style="margin-top: 80px; padding-top: 40px; border-top: 3px solid var(--border);">
+                            <div class="section-header" style="margin-bottom: 30px;">
+                                <h2 class="section-title">📚 Événements passés</h2>
+                                <p style="color: var(--text-light); font-size: 14px; margin-top: 5px;">${passes.length} événement${passes.length > 1 ? 's' : ''}</p>
+                            </div>
+                            <div class="events-grid-pro">
+                                ${passes.map(event => {
+                                    const typeEmoji = {'Conférence': '🎤', 'Atelier': '🛠️', 'Social': '🎉'}[event.type] || '📌';
+
+                                    return `
+                                        <div class="event-card-pro event-card-past">
+                                            <div class="event-badge-top">
+                                                <span class="badge-type">${typeEmoji} ${event.type}</span>
+                                                <span class="badge-past">✓ Terminé</span>
+                                            </div>
+                                            <h3 class="event-title-pro">${event.title}</h3>
+                                            <div class="event-details-pro">
+                                                <div class="detail-item">
+                                                    <span class="detail-icon">📅</span>
+                                                    <div class="detail-content">
+                                                        <span class="detail-label">Date</span>
+                                                        <span class="detail-value">${formatDate(event.date)}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <span class="detail-icon">⏰</span>
+                                                    <div class="detail-content">
+                                                        <span class="detail-label">Heure</span>
+                                                        <span class="detail-value">${formatTime(event.date)}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <span class="detail-icon">📍</span>
+                                                    <div class="detail-content">
+                                                        <span class="detail-label">Lieu</span>
+                                                        <span class="detail-value">${event.location}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <span class="detail-icon">👤</span>
+                                                    <div class="detail-content">
+                                                        <span class="detail-label">Organisateur</span>
+                                                        <span class="detail-value">${event.organizer || 'Organisateur'}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <span class="detail-icon">👥</span>
+                                                    <div class="detail-content">
+                                                        <span class="detail-label">Capacité</span>
+                                                        <span class="detail-value">${event.capacity} personnes</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            ${event.description ? `<div class="event-description-pro"><p>${event.description}</p></div>` : ''}
+                                            <button class="btn-past" disabled>Événement terminé</button>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </section>
+            `;
+
+            document.getElementById('content').innerHTML = html_content;
+        }
+        function selectFilter(filter) {
+            selectedFilter = filter;
+            document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
+            event.target.classList.add('active');
+            renderEvents();
+        }
+
+        function updateSearch() {
+            searchQuery = document.querySelector('.search-box')?.value || '';
+        }
+
+        function registerEvent(id) {
+            const event = allEvents.find(e => e.id === id);
+            if (event && !event.participants.some(p => p.email === currentUser.email)) {
+                event.participants.push({
+                    name: `${userProfile.firstName} ${userProfile.lastName}`.trim() || currentUser.name,
+                    email: currentUser.email,
+                    phone: userProfile.phone,
+                    address: `${userProfile.street}, ${userProfile.city}`,
+                    postalCode: userProfile.postalCode,
+                    country: userProfile.country,
+                    school: userProfile.school,
+                    class: userProfile.class,
+                    year: userProfile.year,
+                    dietaryRestrictions: userProfile.dietaryRestrictions
+                });
+                event.registeredcount++;
+                alert('Inscription réussie! Vos informations ont été enregistrées.');
+            } else {
+                alert('Vous êtes déjà inscrit à cet événement!');
+            }
+        }
+
+        function openParticipants(eventId) {
+            const event = allEvents.find(e => e.id === eventId);
+            const participantsList = document.getElementById('participantsList');
+            const isAdmin = currentUser?.role === 'admin';
+            
+            if (event && event.participants) {
+                if (isAdmin) {
+                    participantsList.innerHTML = `
+                        <div class="subscribers-grid">
+                            ${event.participants.map(p => `
+                                <div class="subscriber-card">
+                                    <div style="margin-bottom: 12px; font-weight: 600; color: var(--primary); font-size: 14px;">
+                                        ${p.name || 'N/A'}
+                                    </div>
+                                    <div class="subscriber-field">
+                                        <span class="subscriber-label">Email</span>
+                                        <span class="subscriber-value">${p.email}</span>
+                                    </div>
+                                    <div class="subscriber-field">
+                                        <span class="subscriber-label">Téléphone</span>
+                                        <span class="subscriber-value">${p.phone || '-'}</span>
+                                    </div>
+                                    <div class="subscriber-field">
+                                        <span class="subscriber-label">Adresse</span>
+                                        <span class="subscriber-value">${p.address || '-'}</span>
+                                    </div>
+                                    <div class="subscriber-field">
+                                        <span class="subscriber-label">Code postal</span>
+                                        <span class="subscriber-value">${p.postalCode || '-'}</span>
+                                    </div>
+                                    <div class="subscriber-field">
+                                        <span class="subscriber-label">Pays</span>
+                                        <span class="subscriber-value">${p.country || '-'}</span>
+                                    </div>
+                                    <div class="subscriber-field">
+                                        <span class="subscriber-label">École</span>
+                                        <span class="subscriber-value">${p.school || '-'}</span>
+                                    </div>
+                                    <div class="subscriber-field">
+                                        <span class="subscriber-label">Classe</span>
+                                        <span class="subscriber-value">${p.class || '-'}</span>
+                                    </div>
+                                    <div class="subscriber-field">
+                                        <span class="subscriber-label">Année</span>
+                                        <span class="subscriber-value">${p.year || '-'}</span>
+                                    </div>
+                                    <div class="subscriber-field">
+                                        <span class="subscriber-label">Régime alimentaire</span>
+                                        <span class="subscriber-value">${p.dietaryRestrictions || '-'}</span>
+                                    </div>
+                                    <div class="subscriber-field">
+                                        <span class="subscriber-label">Statut</span>
+                                        <span class="subscriber-value" style="color: var(--success);">Confirmé</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    participantsList.innerHTML = event.participants.map(p => `
+                        <div class="participant-item">
+                            <div class="participant-info">
+                                <div class="participant-name">${p.name}</div>
+                                <div class="participant-email">${p.email}</div>
+                            </div>
+                            <span class="participant-status">Confirmé</span>
+                        </div>
+                    `).join('');
+                }
+            }
+            document.getElementById('participantsModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('participantsModal').style.display = 'none';
+            document.getElementById('createEventModal').style.display = 'none';
+            document.getElementById('editEventModal').style.display = 'none';
+        }
+
+        function closeEditEventModal() {
+            document.getElementById('editEventModal').style.display = 'none';
+        }
+
+        function filterParticipants() {
+            const search = document.getElementById('participantSearch')?.value.toLowerCase();
+            const items = document.querySelectorAll('.participant-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(search) ? 'flex' : 'none';
+            });
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createEventModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) modal.style.display = 'none';
+            });
+        };
+
+        function renderMyEvents() {
+            document.getElementById('content').innerHTML = `
+                <section class="section">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2 class="section-title">Mes événements</h2>
+                        </div>
+                        <div class="events-grid">
+                            ${allEvents.slice(0, 2).map((e) => `
+                                <div class="event-card">
+                                    <div class="event-header">
+                                        <span class="event-type">${e.type}</span>
+                                        <h3 class="event-title">${e.title}</h3>
+                                    </div>
+                                    <div class="event-body">
+                                        <div class="event-meta">
+                                            <span>📅 ${new Date(e.date).toLocaleDateString('fr-FR')}</span>
+                                            <span>📍 ${e.location}</span>
+                                        </div>
+                                        <p class="event-description">${e.description}</p>
+                                        <div style="padding: 8px 12px; background: #16a34a; color: white; border-radius: 6px; text-align: center; font-size: 12px; font-weight: 600;">Inscrit</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function loadUserProfile() {
+            const saved = localStorage.getItem('userProfile');
+            if (saved) {
+                return JSON.parse(saved);
+            }
+            return {
+                firstName: '',
+                lastName: '',
+                phone: '',
+                street: '',
+                city: '',
+                postalCode: '',
+                country: '',
+                school: '',
+                class: '',
+                year: '',
+                bio: '',
+                dietaryRestrictions: ''
+            };
+        }
+
+        function saveUserProfile(profile) {
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+        }
+
+        let userProfile = loadUserProfile();
+
+        function renderProfile() {
+            const isEditing = localStorage.getItem('profileEditing') === 'true';
+            
+            document.getElementById('content').innerHTML = `
+                <section class="section">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2 class="section-title">Mon Profil</h2>
+                            <div style="margin-top: 16px;">
+                                <button class="btn-primary" style="width: auto;" onclick="toggleProfileEdit()">${isEditing ? 'Annuler' : 'Modifier mon profil'}</button>
+                            </div>
+                        </div>
+
+                        ${isEditing ? `
+                            <div class="profile-card" style="max-width: 100%;">
+                                <h3 class="profile-card-title">Éditer mon profil</h3>
+                                <form onsubmit="saveProfile(event)">
+                                    <div style="margin-bottom: 24px;">
+                                        <h4 style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 12px;">Informations personnelles</h4>
+                                        <div class="form-grid">
+                                            <div class="form-group">
+                                                <label>Prénom</label>
+                                                <input type="text" value="${userProfile.firstName}" id="firstName">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Nom</label>
+                                                <input type="text" value="${userProfile.lastName}" id="lastName">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <input type="email" value="${currentUser.email}" disabled style="opacity: 0.6;">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Téléphone</label>
+                                                <input type="tel" value="${userProfile.phone}" id="phone">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-bottom: 24px;">
+                                        <h4 style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 12px;">Adresse</h4>
+                                        <div class="form-grid">
+                                            <div class="form-group form-group-full">
+                                                <label>Rue</label>
+                                                <input type="text" value="${userProfile.street}" id="street">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Ville</label>
+                                                <input type="text" value="${userProfile.city}" id="city">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Code postal</label>
+                                                <input type="text" value="${userProfile.postalCode}" id="postalCode">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Pays</label>
+                                                <input type="text" value="${userProfile.country}" id="country">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-bottom: 24px;">
+                                        <h4 style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 12px;">Études</h4>
+                                        <div class="form-grid">
+                                            <div class="form-group">
+                                                <label>École/Université</label>
+                                                <input type="text" value="${userProfile.school}" id="school">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Classe</label>
+                                                <input type="text" value="${userProfile.class}" id="class">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Année</label>
+                                                <input type="text" value="${userProfile.year}" id="year">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-bottom: 24px;">
+                                        <h4 style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 12px;">Autres informations</h4>
+                                        <div class="form-grid">
+                                            <div class="form-group form-group-full">
+                                                <label>Bio</label>
+                                                <textarea id="bio" rows="3" style="resize: vertical;">${userProfile.bio}</textarea>
+                                            </div>
+                                            <div class="form-group form-group-full">
+                                                <label>Restrictions alimentaires</label>
+                                                <input type="text" value="${userProfile.dietaryRestrictions}" id="dietaryRestrictions" placeholder="Ex: Végétarien, Sans gluten...">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="edit-buttons">
+                                        <button type="submit" class="btn-primary" style="width: auto;">Enregistrer</button>
+                                        <button type="button" class="btn-secondary" onclick="toggleProfileEdit()">Annuler</button>
+                                    </div>
+                                </form>
+                            </div>
+                        ` : `
+                            <div class="profile-grid">
+                                <div class="profile-card">
+                                    <h3 class="profile-card-title">Informations personnelles</h3>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Prénom</span>
+                                        <span class="stat-value">${userProfile.firstName || '-'}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Nom</span>
+                                        <span class="stat-value">${userProfile.lastName || '-'}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Email</span>
+                                        <span class="stat-value">${currentUser.email}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Téléphone</span>
+                                        <span class="stat-value">${userProfile.phone || '-'}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Rôle</span>
+                                        <span class="stat-value">${currentUser.role === 'admin' ? 'Administrateur' : 'Utilisateur'}</span>
+                                    </div>
+                                </div>
+
+                                <div class="profile-card">
+                                    <h3 class="profile-card-title">Adresse</h3>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Rue</span>
+                                        <span class="stat-value">${userProfile.street || '-'}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Ville</span>
+                                        <span class="stat-value">${userProfile.city || '-'}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Code postal</span>
+                                        <span class="stat-value">${userProfile.postalCode || '-'}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Pays</span>
+                                        <span class="stat-value">${userProfile.country || '-'}</span>
+                                    </div>
+                                </div>
+
+                                <div class="profile-card">
+                                    <h3 class="profile-card-title">Études</h3>
+                                    <div class="stat-row">
+                                        <span class="stat-label">École</span>
+                                        <span class="stat-value">${userProfile.school || '-'}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Classe</span>
+                                        <span class="stat-value">${userProfile.class || '-'}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Année</span>
+                                        <span class="stat-value">${userProfile.year || '-'}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Bio</span>
+                                        <span class="stat-value">${userProfile.bio || '-'}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Régime</span>
+                                        <span class="stat-value">${userProfile.dietaryRestrictions || '-'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `}
+                    </div>
+                </section>
+            `;
+        }
+
+        function toggleProfileEdit() {
+            const isEditing = localStorage.getItem('profileEditing') === 'true';
+            localStorage.setItem('profileEditing', (!isEditing).toString());
+            renderProfile();
+        }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            userProfile = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                phone: document.getElementById('phone').value,
+                street: document.getElementById('street').value,
+                city: document.getElementById('city').value,
+                postalCode: document.getElementById('postalCode').value,
+                country: document.getElementById('country').value,
+                school: document.getElementById('school').value,
+                class: document.getElementById('class').value,
+                year: document.getElementById('year').value,
+                bio: document.getElementById('bio').value,
+                dietaryRestrictions: document.getElementById('dietaryRestrictions').value
+            };
+            saveUserProfile(userProfile);
+            localStorage.setItem('profileEditing', 'false');
+            alert('Profil sauvegardé avec succès!');
+            renderProfile();
+        }
+
+        function renderAdmin() {
+            document.getElementById('content').innerHTML = `
+                <section class="section">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2 class="section-title">Panneau Admin</h2>
+                        </div>
+                        <button class="btn-add-event" onclick="openCreateEvent()">Créer un événement</button>
+                        <div class="admin-tabs">
+                            <button class="admin-tab active" onclick="switchAdminTab('stats', event)">Statistiques</button>
+                            <button class="admin-tab" onclick="switchAdminTab('manage', event)">Gérer</button>
+                        </div>
+                        <div id="admin-content"></div>
+                    </div>
+                </section>
+            `;
+            renderStats();
+        }
+
+        function switchAdminTab(tab, e) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            if (tab === 'stats') renderStats();
+            else if (tab === 'manage') renderManageEvents();
+        }
+
+        function renderStats() {
+            const total = allEvents.length;
+            const attendees = allEvents.reduce((sum, e) => sum + e.registeredcount, 0);
+            const fill = Math.round((attendees / allEvents.reduce((sum, e) => sum + e.capacity, 0)) * 100);
+            
+            document.getElementById('admin-content').innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-value">${total}</div>
+                        <div class="stat-card-label">Événements</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-value">${attendees}</div>
+                        <div class="stat-card-label">Participants</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-value">${fill}%</div>
+                        <div class="stat-card-label">Taux moyen</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-value">2</div>
+                        <div class="stat-card-label">Événements complets</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderManageEvents() {
+            document.getElementById('admin-content').innerHTML = `
+                <div class="events-grid">
+                    ${allEvents.map(e => `
+                        <div class="event-card">
+                            <div class="event-header">
+                                <span class="event-type">${e.type}</span>
+                                <h3 class="event-title">${e.title}</h3>
+                            </div>
+                            <div class="event-body">
+                                <div style="font-size: 13px; color: var(--text-light); margin-bottom: 16px;">
+                                    ${e.registeredcount}/${e.capacity} places
+                                </div>
+                            </div>
+                            <div class="event-footer">
+                                <button class="btn-edit" onclick="openEditEventModal(${e.id})">Modifier</button>
+                                <button class="btn-delete" onclick="deleteEvent(${e.id})">Supprimer</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function openCreateEvent() {
+            document.getElementById('createEventModal').style.display = 'block';
+        }
+        
+
+        async function handleCreateEvent(e) {
+            e.preventDefault();
+
+            const eventData = {
+                title: document.getElementById('eventTitle').value,
+                type: document.getElementById('eventType').value,
+                date: document.getElementById('eventDate').value,  // Pas toISOString()!
+                location: document.getElementById('eventLocation').value,
+                capacity: parseInt(document.getElementById('eventCapacity').value),
+                description: document.getElementById('eventDescription').value || '',
+                organizer: document.getElementById('eventOrganizer').value || ''
+            };
+
+            if (!eventData.title || !eventData.type || !eventData.date || !eventData.location || !eventData.capacity) {
+                alert('Veuillez remplir tous les champs obligatoires!');
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    alert('Vous devez être connecté!');
+                    return;
+                }
+
+                const response = await fetch('http://localhost:3001/api/events', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(eventData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    alert('Erreur: ' + (error.error || 'Impossible de créer'));
+                    return;
+                }
+
+                alert('Événement créé avec succès!');
+
+                // Réinitialiser les champs
+                document.getElementById('eventTitle').value = '';
+                document.getElementById('eventType').value = '';
+                document.getElementById('eventDate').value = '';
+                document.getElementById('eventLocation').value = '';
+                document.getElementById('eventCapacity').value = '';
+                document.getElementById('eventOrganizer').value = '';
+                document.getElementById('eventDescription').value = '';
+
+                closeCreateModal();
+
+                // Recharger les événements
+                renderEvents();
+            } catch (error) {
+                console.error(error);
+                alert('Erreur: ' + error.message);
+            }
+        }
+
+        function openEditEventModal(id) {
+            const event = allEvents.find(e => e.id === id);
+            if (!event) return;
+
+            document.getElementById('editEventTitle').value = event.title;
+            document.getElementById('editEventType').value = event.type;
+            document.getElementById('editEventDate').value = event.date.substring(0, 16);
+            document.getElementById('editEventLocation').value = event.location;
+            document.getElementById('editEventCapacity').value = event.capacity;
+            document.getElementById('editEventOrganizer').value = event.organizer;
+            document.getElementById('editEventDescription').value = event.description;
+            document.getElementById('editEventModal').dataset.eventId = id;
+            document.getElementById('editEventModal').style.display = 'block';
+        }
+
+        function handleEditEvent(e) {
+            e.preventDefault();
+            const eventId = parseInt(document.getElementById('editEventModal').dataset.eventId);
+            const event = allEvents.find(e => e.id === eventId);
+
+            if (event) {
+                event.title = document.getElementById('editEventTitle').value;
+                event.type = document.getElementById('editEventType').value;
+                event.date = new Date(document.getElementById('editEventDate').value).toISOString();
+                event.location = document.getElementById('editEventLocation').value;
+                event.capacity = parseInt(document.getElementById('editEventCapacity').value);
+                event.organizer = document.getElementById('editEventOrganizer').value;
+                event.description = document.getElementById('editEventDescription').value;
+
+                document.getElementById('editEventModal').style.display = 'none';
+                alert('Événement mis à jour avec succès!');
+                renderAdmin();
+            }
+        }
+
+        function editEvent(id) {
+            openEditEventModal(id);
+        }
+
+        function deleteEvent(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet événement?')) {
+                allEvents = allEvents.filter(e => e.id !== id);
+                alert('Événement supprimé!');
+                renderAdmin();
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            authToken = null;
+            currentUser = null;
+            selectedFilter = 'Tous';
+            searchQuery = '';
+            renderAuth();
+        }  
+    </script>
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-register')) {
+            const eventId = e.target.getAttribute('data-event-id');
+            console.log('Bouton cliqué, eventId:', eventId);
+            handleEventRegister(eventId);
+        }
+    });
+});
+</script>
+
+</body>
+</html>
