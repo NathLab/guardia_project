@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline with Security
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  build-test-security:
     runs-on: ubuntu-latest
     
     steps:
@@ -23,5 +23,14 @@ jobs:
       working-directory: ./backend
       run: npm ci
       
+    - name: Run Security Audit
+      working-directory: ./backend
+      run: npm audit --audit-level=moderate
+      continue-on-error: true
+      
+    - name: Run Tests
+      working-directory: ./backend
+      run: npm test
+      
     - name: Build Success
-      run: echo "✅ Build completed successfully!"
+      run: echo "✅ Build, tests and security checks completed!"
