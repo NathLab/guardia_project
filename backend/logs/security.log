@@ -1,0 +1,16 @@
+{"email":"@dsq","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:01:49"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:24"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:24"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:50"}
+{"email":"dqs","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:02:50"}
+{"email":"dqs","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:02:51"}
+{"email":"dqs","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:02:56"}
+{"email":"nathan","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:03:11"}
+{"email":"nathan2@gmail.com","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:03:26"}
+{"email":"nathan2@gmail.com","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:04:35"}

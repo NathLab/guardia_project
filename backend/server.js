@@ -37,54 +37,71 @@ const logger = winston.createLogger({
   ]
 });
 
+// ========== CORS EN PREMIER (ULTRA PERMISSIF POUR DEV) ==========
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  res.header('Access-Control-Allow-Origin', origin || '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  // Répond immédiatement aux requêtes OPTIONS (preflight)
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
+
+// Package CORS (backup)
+app.use(cors({
+  origin: true,
+  credentials: true,
+  optionsSuccessStatus: 200
+}));
+
+// ========== HELMET (APRÈS CORS, VERSION PERMISSIVE) ==========
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+  crossOriginOpenerPolicy: false,
+  crossOriginEmbedderPolicy: false
+}));
+
 // ========== RATE LIMITING ==========
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  message: 'Trop de requêtes, veuillez réessayer plus tard',
+  message: { error: 'Trop de requêtes, veuillez réessayer plus tard' },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
-  message: 'Trop de tentatives de connexion, veuillez réessayer dans 15 minutes',
+  max: 10,
+  message: { error: 'Trop de tentatives de connexion, veuillez réessayer dans 15 minutes' },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => req.method === 'OPTIONS',
   skipSuccessfulRequests: true,
+  skipFailedRequests: false,
+  keyGenerator: (req) => {
+    return req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown';
+  },
+  handler: (req, res) => {
+    logger.warn('🚨 RATE LIMIT DÉCLENCHÉ', { 
+      ip: req.ip,
+      path: req.path,
+      email: req.body?.email || 'N/A'
+    });
+    
+    res.status(429).json({ 
+      error: 'Trop de tentatives de connexion',
+      message: 'Veuillez réessayer dans 15 minutes',
+      retryAfter: 900
+    });
+  }
 });
-
-// ========== HEADERS DE SECURITE ==========
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'"],
-    },
-  },
-  crossOriginEmbedderPolicy: false,
-  crossOriginResourcePolicy: { policy: "cross-origin" },
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  },
-  noSniff: true,
-  xssFilter: true,
-  frameguard: { action: 'deny' }
-}));
-
-// ========== CORS SECURISE ==========
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://votre-domaine.com'] 
-    : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:5500', 'http://127.0.0.1:5501', 'https://localhost:3001'],
-  credentials: true,
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
 
 // ========== MIDDLEWARES ==========
 app.use(limiter);
@@ -655,15 +672,13 @@ app.get('/api/user/registrations', authenticateToken, async (req, res) => {
   }
 });
 
-// ========== DEMARRAGE SERVEUR AVEC HTTPS ==========
+// ========== DEMARRAGE SERVEUR ==========
 const startServer = () => {
-  // Créer le dossier logs s'il n'existe pas
   const logsDir = path.join(__dirname, 'logs');
   if (!fs.existsSync(logsDir)) {
     fs.mkdirSync(logsDir, { recursive: true });
   }
 
-  // Tenter de démarrer en HTTPS
   if (process.env.ENABLE_HTTPS === 'true') {
     try {
       const sslPath = path.join(__dirname, 'ssl');
@@ -678,11 +693,10 @@ const startServer = () => {
 
         https.createServer(sslOptions, app).listen(PORT, () => {
           console.log(`🔒 Serveur HTTPS lancé sur https://localhost:${PORT}`);
-          console.log(`✅ Sécurité complète activée : HTTPS + Helmet + Rate Limiting + Logs`);
+          console.log(`✅ CORS ultra-permissif activé (DEV MODE)`);
           logger.info('Serveur HTTPS démarré', { port: PORT });
         });
 
-        // Redirection HTTP vers HTTPS
         http.createServer((req, res) => {
           res.writeHead(301, { "Location": "https://" + req.headers['host'].replace('3000', PORT) + req.url });
           res.end();
@@ -706,7 +720,9 @@ const startServer = () => {
 const startHTTP = () => {
   app.listen(PORT, () => {
     console.log(`🚀 Serveur HTTP lancé sur http://localhost:${PORT}`);
-    console.log(`🔒 Sécurité activée : Helmet + Rate Limiting + Validation + Logs`);
+    console.log(`✅ CORS ultra-permissif activé (mode développement)`);
+    console.log(`✅ Rate Limiting : 10 tentatives/15min`);
+    console.log(`✅ Protection brute force active`);
     logger.info('Serveur HTTP démarré', { port: PORT });
   });
 };

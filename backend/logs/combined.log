@@ -1,1 +1,31 @@
 {"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:16:54"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:20:05"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:23:36"}
+{"level":"info","message":"Serveur HTTP démarré avec rate limiting actif","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:32:18"}
+{"level":"info","message":"Serveur HTTP démarré avec rate limiting actif","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:35:01"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:40:48"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:41:45"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:42:26"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:45:20"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:48:13"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:54:27"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:54:43"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 17:56:24"}
+{"level":"info","message":"Serveur HTTP démarré","port":"3001","service":"guardia-api","timestamp":"2025-12-04 18:01:42"}
+{"email":"@dsq","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:01:49"}
+{"email":"nathan2@gmail.com","ip":"::1","level":"info","message":"Login réussi","service":"guardia-api","timestamp":"2025-12-04 18:02:03","userId":12}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:24"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:24"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:25"}
+{"email":"@dqs","ip":"::1","level":"warn","message":"Login - Validation échouée","service":"guardia-api","timestamp":"2025-12-04 18:02:50"}
+{"email":"dqs","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:02:50"}
+{"email":"dqs","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:02:51"}
+{"email":"dqs","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:02:56"}
+{"email":"nathan","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:03:11"}
+{"email":"nathan2@gmail.com","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:03:26"}
+{"email":"nathan2@gmail.com","ip":"::1","level":"warn","message":"🚨 RATE LIMIT DÉCLENCHÉ","path":"/api/auth/login","service":"guardia-api","timestamp":"2025-12-04 18:04:35"}

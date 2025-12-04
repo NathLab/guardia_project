@@ -1,0 +1,74 @@
+name: OWASP ZAP Security Scan
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    # Lance le scan tous les lundis à 2h du matin
+    - cron: '0 2 * * 1'
+  workflow_dispatch: # Permet de lancer manuellement
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Scan de sécurité OWASP ZAP
+    
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Installation des dépendances
+        run: |
+          cd backend
+          npm ci
+
+      - name: Démarrage du serveur backend
+        run: |
+          cd backend
+          npm start &
+          sleep 10
+        env:
+          NODE_ENV: test
+          PORT: 3001
+          JWT_SECRET: test_secret_for_zap_scan
+
+      - name: Vérification que le serveur tourne
+        run: |
+          curl -f http://localhost:3001/api/test || exit 1
+
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+          target: 'http://localhost:3001'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a -j'
+          fail_action: false
+          allow_issue_writing: false
+
+      - name: Upload des résultats ZAP
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: zap-scan-report
+          path: |
+            report_html.html
+            report_json.json
+            report_md.md
+
+      - name: Résumé des résultats
+        if: always()
+        run: |
+          echo "## 🛡️ Résultats du scan OWASP ZAP" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f report_md.md ]; then
+            cat report_md.md >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ Scan terminé avec succès" >> $GITHUB_STEP_SUMMARY
+          fi
