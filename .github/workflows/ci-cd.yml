@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline with Security
 
 on:
   push:
@@ -23,5 +23,15 @@ jobs:
       working-directory: ./backend
       run: npm ci
       
-    - name: Success message
-      run: echo "Build successful!"
+    - name: Start Backend Server
+      working-directory: ./backend
+      run: |
+        npm start &
+        sleep 10
+      
+    - name: OWASP ZAP Baseline Scan
+      uses: zaproxy/action-baseline@v0.12.0
+      with:
+        target: 'http://localhost:3000'
+        rules_file_name: '.zap/rules.tsv'
+        cmd_options: '-a'
