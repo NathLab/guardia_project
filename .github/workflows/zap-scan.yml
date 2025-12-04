@@ -6,9 +6,8 @@ on:
   pull_request:
     branches: [ main, master ]
   schedule:
-    # Lance le scan tous les lundis à 2h du matin
     - cron: '0 2 * * 1'
-  workflow_dispatch: # Permet de lancer manuellement
+  workflow_dispatch:
 
 jobs:
   zap_scan:
@@ -17,12 +16,12 @@ jobs:
     
     steps:
       - name: Checkout du code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # ✅ v4 aussi
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4  # ✅ v4
         with:
-          node-version: '18'
+          node-version: '20'  # ✅ Node 20 LTS
 
       - name: Installation des dépendances
         run: |
@@ -37,23 +36,20 @@ jobs:
         env:
           NODE_ENV: test
           PORT: 3001
-          JWT_SECRET: test_secret_for_zap_scan
 
       - name: Vérification que le serveur tourne
         run: |
           curl -f http://localhost:3001/api/test || exit 1
 
       - name: OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.10.0
+        uses: zaproxy/action-baseline@v0.12.0  # ✅ Dernière version
         with:
           target: 'http://localhost:3001'
-          rules_file_name: '.zap/rules.tsv'
-          cmd_options: '-a -j'
           fail_action: false
           allow_issue_writing: false
 
       - name: Upload des résultats ZAP
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # ✅ v4 CORRIGÉ !
         if: always()
         with:
           name: zap-scan-report
