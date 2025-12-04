@@ -1,12 +1,9 @@
-const request = require('supertest');
-
-// Test simple sans importer le serveur (pour éviter les problèmes de DB)
 describe('Backend API Tests', () => {
   test('Test basique - Jest fonctionne', () => {
     expect(1 + 1).toBe(2);
   });
 
-  test('Variables d\'environnement chargées', () => {
+  test('Variables environnement chargées', () => {
     expect(process.env).toBeDefined();
   });
 
