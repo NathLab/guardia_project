@@ -21,7 +21,8 @@ jobs:
         
     - name: Install Backend Dependencies
       working-directory: ./backend
-      run: npm install
+      run: npm ci
       
-    - name: List files
+    - name: Check Backend Files
+      working-directory: ./backend
       run: ls -la
