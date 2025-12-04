@@ -1,15 +1,96 @@
+// ========== IMPORTS ==========
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const { body, validationResult } = require('express-validator');
 const pool = require('./database');
 
 const app = express();
-const JWT_SECRET = 'guardia_secret_key_change_in_production';
 
-app.use(cors());
-app.use(express.json());
+// ========== CONFIGURATION ==========
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_for_dev_only';
+const PORT = process.env.PORT || 3001;
 
+// ========== RATE LIMITING ==========
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  message: 'Trop de requêtes, veuillez réessayer plus tard',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: 'Trop de tentatives de connexion, veuillez réessayer dans 15 minutes',
+  skipSuccessfulRequests: true,
+});
+
+// ========== HEADERS DE SECURITE ==========
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  },
+  noSniff: true,
+  xssFilter: true,
+  frameguard: { action: 'deny' }
+}));
+
+// ========== CORS SECURISE ==========
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://votre-domaine.com'] 
+    : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:5500', 'http://127.0.0.1:5501'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
+// ========== MIDDLEWARES ==========
+app.use(limiter);
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// ========== VALIDATIONS ==========
+const registerValidation = [
+  body('name').trim().isLength({ min: 2, max: 100 }).withMessage('Nom invalide'),
+  body('email').isEmail().normalizeEmail().withMessage('Email invalide'),
+  body('student_id').trim().notEmpty().isLength({ max: 50 }).withMessage('Numéro étudiant invalide'),
+  body('password').isLength({ min: 6, max: 100 }).withMessage('Mot de passe minimum 6 caractères'),
+];
+
+const loginValidation = [
+  body('email').isEmail().normalizeEmail().withMessage('Email invalide'),
+  body('password').notEmpty().withMessage('Mot de passe requis'),
+];
+
+const eventValidation = [
+  body('title').trim().isLength({ min: 3, max: 200 }).withMessage('Titre invalide'),
+  body('type').trim().notEmpty().withMessage('Type requis'),
+  body('date').isISO8601().withMessage('Date invalide'),
+  body('location').trim().isLength({ min: 3, max: 200 }).withMessage('Lieu invalide'),
+  body('capacity').isInt({ min: 1, max: 10000 }).withMessage('Capacité invalide'),
+];
+
+// ========== MIDDLEWARES D'AUTHENTIFICATION ==========
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -34,17 +115,15 @@ function isAdmin(req, res, next) {
   next();
 }
 
-app.post('/api/auth/register', async (req, res) => {
+// ========== ROUTES D'AUTHENTIFICATION ==========
+app.post('/api/auth/register', authLimiter, registerValidation, async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const { name, email, student_id, password } = req.body;
-
-    if (!name || !email || !student_id || !password) {
-      return res.status(400).json({ message: 'Tous les champs sont requis' });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({ message: 'Le mot de passe doit contenir au moins 6 caractères' });
-    }
 
     const [existingUsers] = await pool.query(
       'SELECT id FROM users WHERE email = ? OR student_id = ?',
@@ -72,13 +151,14 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authLimiter, loginValidation, async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email et mot de passe requis' });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
+
+    const { email, password } = req.body;
 
     const [users] = await pool.query(
       'SELECT * FROM users WHERE email = ?',
@@ -103,7 +183,7 @@ app.post('/api/auth/login', async (req, res) => {
         role: user.role
       },
       JWT_SECRET,
-      { expiresIn: '24h' }
+      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
     );
 
     res.json({
@@ -149,6 +229,7 @@ app.get('/api/auth/verify', authenticateToken, async (req, res) => {
   }
 });
 
+// ========== ROUTES ADMIN ==========
 app.get('/api/admin/users', authenticateToken, isAdmin, async (req, res) => {
   try {
     const [users] = await pool.query(`
@@ -262,6 +343,7 @@ app.patch('/api/admin/users/:id/role', authenticateToken, isAdmin, async (req, r
   }
 });
 
+// ========== ROUTES ÉVÉNEMENTS ==========
 app.get('/api/test', (req, res) => {
   res.json({ message: 'API Node.js opérationnelle !' });
 });
@@ -296,14 +378,14 @@ app.get('/api/events', async (req, res) => {
   }
 });
 
-
-app.post('/api/events', authenticateToken, async (req, res) => {
+app.post('/api/events', authenticateToken, eventValidation, async (req, res) => {
   try {
-    const { title, type, date, location, capacity, description, organizer } = req.body;
-
-    if (!title || !type || !date || !location || !capacity) {
-      return res.status(400).json({ error: 'Champs requis manquants' });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
+
+    const { title, type, date, location, capacity, description, organizer } = req.body;
 
     const [result] = await pool.query(`
       INSERT INTO events (title, type, date, location, capacity, description, organizer, created_by)
@@ -321,8 +403,13 @@ app.post('/api/events', authenticateToken, async (req, res) => {
   }
 });
 
-app.put('/api/events/:id', authenticateToken, async (req, res) => {
+app.put('/api/events/:id', authenticateToken, eventValidation, async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const eventId = req.params.id;
     const { title, type, date, location, capacity, description, organizer } = req.body;
 
@@ -337,10 +424,6 @@ app.put('/api/events/:id', authenticateToken, async (req, res) => {
 
     if (events[0].created_by !== req.user.userId && req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Vous n\'avez pas la permission de modifier cet événement' });
-    }
-
-    if (!title || !type || !date || !location || !capacity) {
-      return res.status(400).json({ error: 'Champs requis manquants' });
     }
 
     const [result] = await pool.query(`
@@ -407,19 +490,19 @@ app.post('/api/events/:id/register', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de l\'inscription' });
   }
 });
-// Récupérer les événements du user connecté
+
 app.get('/api/users/:userId/events', authenticateToken, async (req, res) => {
-    try {
-        const userId = req.params.userId;
-        const [events] = await pool.query(`
-            SELECT e.* FROM events e
-            INNER JOIN registrations r ON e.id = r.event_id
-            WHERE r.user_id = ?
-        `, [userId]);
-        res.json(events);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+  try {
+    const userId = req.params.userId;
+    const [events] = await pool.query(`
+      SELECT e.* FROM events e
+      INNER JOIN registrations r ON e.id = r.event_id
+      WHERE r.user_id = ?
+    `, [userId]);
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 app.get('/api/events/:id/participants', authenticateToken, async (req, res) => {
@@ -478,8 +561,6 @@ app.delete('/api/events/:eventId/participants/:participantId', authenticateToken
   }
 });
 
-
-
 app.delete('/api/events/:id/unregister', authenticateToken, async (req, res) => {
   try {
     const eventId = req.params.id;
@@ -528,7 +609,10 @@ app.get('/api/user/registrations', authenticateToken, async (req, res) => {
   }
 });
 
-const PORT = 3001;
+// ========== DEMARRAGE SERVEUR ==========
 app.listen(PORT, () => {
   console.log(`🚀 Serveur Node.js lancé sur http://localhost:${PORT}`);
+  console.log(`🔒 Sécurité activée : Helmet, Rate Limiting, Validation`);
 });
+
+module.exports = app;
