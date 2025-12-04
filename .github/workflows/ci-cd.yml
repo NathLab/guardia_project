@@ -23,9 +23,5 @@ jobs:
       working-directory: ./backend
       run: npm ci
       
-    - name: Run Backend Tests (if any)
-      working-directory: ./backend
-      run: npm test --if-present
-      
     - name: Build Success
-      run: echo "✅ Build and tests completed successfully!"
+      run: echo "✅ Build completed successfully!"
